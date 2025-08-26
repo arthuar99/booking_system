@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Home · Booking Platform{% endblock %}
+
+{% block content %}
+<section class="relative overflow-hidden">
+    <div
+        class="absolute inset-0 -z-10 bg-[radial-gradient(1200px_480px_at_20%_0%,_rgba(59,130,246,.25),_transparent_40%),_linear-gradient(180deg,_#0b0b0f,_#121217)] dark:bg-[radial-gradient(1200px_480px_at_20%_0%,_rgba(59,130,246,.15),_transparent_40%),_linear-gradient(180deg,_#0b0b0f,_#121217)]">
+    </div>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        <div class="max-w-3xl">
+            <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-zinc-100">Find the right freelancer. Book
+                in minutes.</h1>
+            <p class="mt-4 text-zinc-400 text-lg">A modern platform for expert services with live availability, verified
+                reviews, and secure booking.</p>
+            <div class="mt-8 flex items-center gap-3">
+                <a href="/register" class="inline-flex items-center rounded-lg btn-primary px-4 py-2.5 font-medium">Get
+                    started</a>
+                <a href="/services"
+                    class="inline-flex items-center rounded-lg border btn-outline px-4 py-2.5 font-medium">Browse
+                    services</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="explore" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-xl font-semibold mb-6">Popular categories</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for category in [
+        {"title":"Design","desc":"UI/UX, logos, branding"},
+        {"title":"Development","desc":"Web, mobile, backend"},
+        {"title":"Marketing","desc":"SEO, content, ads"},
+        {"title":"Writing","desc":"Copywriting, blogs, scripts"},
+        {"title":"Video","desc":"Editing, motion graphics"},
+        {"title":"Consulting","desc":"Business, finance, legal"}
+        ] %}
+        <div
+            class="card rounded-2xl border border-zinc-200 p-5 bg-white/70 ring-gradient dark:border-zinc-800 dark:bg-zinc-950/40">
+            <div class="text-brand-600 text-xl">★</div>
+            <div class="mt-3 font-medium text-zinc-900 dark:text-zinc-100">{{ category.title }}</div>
+            <div class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{{ category.desc }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

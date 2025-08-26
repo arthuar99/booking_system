@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Booking Platform{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12">
+    <div
+        class="rounded-2xl border border-zinc-200 p-6 bg-white/70 ring-gradient dark:border-zinc-800 dark:bg-zinc-950/40">
+        <h1 class="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">This page is powered by your frontend app. If you see
+            this, the React dashboard route should be mounted at <code
+                class="px-1 rounded bg-zinc-800/10 dark:bg-white/10">/dashboard</code>.</p>
+        <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">If you're running an SPA, you can replace this
+            server-rendered page or let the SPA take over this path.</p>
+        <div class="mt-4"><a href="/"
+                class="inline-flex items-center rounded-lg border btn-outline px-4 py-2.5 font-medium">Back home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+/* Minimal custom tweaks on top of Tailwind CDN */
+:root {
+  --ring: 217 91% 60%;
+  --brand: 217 91% 60%;
+  --brand-strong: 221 83% 53%;
+  --surface: 0 0% 100%;
+  --muted: 240 5% 96%;
+  --text: 240 6% 10%;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Glass utilities */
+.glass {
+  backdrop-filter: saturate(1.2) blur(10px);
+  -webkit-backdrop-filter: saturate(1.2) blur(10px);
+}
+.card {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -12px rgb(0 0 0 / .35); }
+
+/* Soft gradient ring for cards/buttons */
+.ring-gradient {
+  background-image: radial-gradient(1200px 400px at 100% 0, hsla(var(--brand), .08), transparent 40%),
+                    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
+}
+
+/* Button polish */
+.btn-primary {
+  background: linear-gradient(180deg, hsl(var(--brand)) 0%, hsl(var(--brand-strong)) 100%);
+  color: white;
+}
+.btn-primary:hover { filter: brightness(1.05); }
+.btn-outline { border-color: rgb(39 39 42 / .5); }
+.btn-outline:hover { background: rgba(39,39,42,.08); }
+
+

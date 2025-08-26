@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Booking Platform{% endblock %}</title>
+    <meta name="color-scheme" content="dark light" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa',
+                            500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8'
+                        }
+                    },
+                    boxShadow: {
+                        soft: '0 1px 2px 0 rgb(0 0 0 / 0.06), 0 2px 8px -2px rgb(0 0 0 / 0.08)'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/static/css/app.css" />
+</head>
+
+<body class="h-full bg-white text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
+    <div id="app" class="min-h-full flex flex-col">
+        <header
+            class="sticky top-0 z-30 backdrop-blur bg-white/70 border-b border-zinc-200 dark:bg-zinc-950/70 dark:border-zinc-800">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2">
+                    <div
+                        class="h-8 w-8 rounded-lg bg-brand-100 border border-brand-100 flex items-center justify-center shadow-soft dark:bg-brand-600/20 dark:border-brand-600/30">
+                        <span class="text-brand-600 font-bold dark:text-brand-500">B</span>
+                    </div>
+                    <span class="font-semibold">Booking Platform</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-6 text-sm text-zinc-600 dark:text-zinc-300">
+                    <a href="/services" class="hover:text-zinc-900 dark:hover:text-white">Services</a>
+                    <a href="/book" class="hover:text-zinc-900 dark:hover:text-white">Book</a>
+                    <a href="/availability/create" class="hover:text-zinc-900 dark:hover:text-white">Availability</a>
+                    <a href="/reviews/create" class="hover:text-zinc-900 dark:hover:text-white">Review</a>
+                    <a href="/my/bookings" class="hover:text-zinc-900 dark:hover:text-white">My bookings</a>
+                    <a href="/dashboard" class="hover:text-zinc-900 dark:hover:text-white">Dashboard</a>
+                </nav>
+                <div class="flex items-center gap-2">
+                    <a id="login-link" href="/login"
+                        class="hidden sm:inline-flex items-center rounded-lg border border-zinc-200 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900">Login</a>
+                    <a id="register-link" href="/register"
+                        class="hidden sm:inline-flex items-center rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-500">Register</a>
+                    <button id="logout-link" style="display:none"
+                        class="inline-flex items-center rounded-lg border border-zinc-200 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900">Sign
+                        out</button>
+                    <button id="theme-toggle"
+                        class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900">
+                        <span class="i">🌓</span>
+                        <span class="hidden sm:inline">Theme</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="border-t border-zinc-200 py-8 mt-12 dark:border-zinc-800">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-zinc-500 dark:text-zinc-400">
+                © <span id="year"></span> Booking Platform
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/js/theme.js"></script>
+    {% block scripts %}{% endblock %}
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+        // Navbar auth controls for server-rendered pages
+        (function () {
+            const token = localStorage.getItem('token');
+            const login = document.getElementById('login-link');
+            const register = document.getElementById('register-link');
+            const logout = document.getElementById('logout-link');
+            if (token) {
+                if (login) login.style.display = 'none';
+                if (register) register.style.display = 'none';
+                if (logout) logout.style.display = '';
+                logout?.addEventListener('click', async () => {
+                    try { await fetch('/auth/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } }); } catch (e) { }
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('role');
+                    location.href = '/login?reason=auth';
+                });
+            }
+            // protect links if not logged in
+            if (!token) {
+                const protectedLinks = Array.from(document.querySelectorAll('a[href^="/services"], a[href="/book"], a[href^="/availability"], a[href^="/reviews"], a[href^="/my/bookings"], a[href^="/dashboard"]'));
+                protectedLinks.forEach(a => {
+                    a.addEventListener('click', function (ev) { ev.preventDefault(); location.href = '/login?reason=auth'; });
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

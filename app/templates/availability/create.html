@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Add Availability · Booking Platform{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-md px-4 sm:px-6 lg:px-8 py-12">
+    <div
+        class="rounded-2xl border border-zinc-200 p-6 bg-white/70 ring-gradient dark:border-zinc-800 dark:bg-zinc-950/40">
+        <h1 class="text-2xl font-semibold tracking-tight">Add availability</h1>
+        <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Let clients know when you’re free. Times use your local
+            timezone.</p>
+        <form id="availability-form" class="mt-6 grid gap-4">
+            <div>
+                <label class="block text-sm text-zinc-400">Day of week (0-6)</label>
+                <input name="day_of_week" type="number" min="0" max="6"
+                    class="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">Start time</label>
+                <input name="start_time" type="time"
+                    class="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">End time</label>
+                <input name="end_time" type="time"
+                    class="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900" />
+            </div>
+            <button
+                class="mt-2 inline-flex items-center rounded-lg btn-primary px-4 py-2.5 font-medium w-full">Add</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('availability-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const token = localStorage.getItem('token');
+        const payload = {
+            day_of_week: Number(form.day_of_week.value),
+            start_time: form.start_time.value,
+            end_time: form.end_time.value
+        };
+        const res = await fetch('/availability/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            alert('Availability added');
+        } else {
+            const err = await res.json().catch(() => ({}));
+            alert(err.detail || 'Failed');
+        }
+    });
+</script>
+{% endblock %}

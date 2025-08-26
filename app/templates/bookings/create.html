@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Create Booking · Booking Platform{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-md px-4 sm:px-6 lg:px-8 py-12">
+    <div class="rounded-2xl border border-zinc-800 p-6 bg-zinc-950/40">
+        <h1 class="text-xl font-semibold">Create booking</h1>
+        <form id="booking-form" class="mt-6 grid gap-4">
+            <div>
+                <label class="block text-sm text-zinc-400">Service ID</label>
+                <input name="service_id" type="number"
+                    class="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">Start at (ISO)</label>
+                <input name="start_at" type="datetime-local"
+                    class="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2" />
+            </div>
+            <button
+                class="mt-2 inline-flex items-center rounded-lg bg-brand-600 px-4 py-2.5 font-medium hover:bg-brand-500 w-full">Book</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('booking-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const token = localStorage.getItem('token');
+        const payload = {
+            service_id: Number(form.service_id.value),
+            start_at: new Date(form.start_at.value).toISOString()
+        };
+        const res = await fetch('/bookings/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            location.href = '/my/bookings';
+        } else {
+            const err = await res.json().catch(() => ({}));
+            alert(err.detail || 'Booking failed');
+        }
+    });
+</script>
+{% endblock %}

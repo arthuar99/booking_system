@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Register · Booking Platform{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-md px-4 sm:px-6 lg:px-8 py-12">
+    <div class="rounded-2xl border border-zinc-800 p-6 bg-zinc-950/40">
+        <h1 class="text-xl font-semibold">Create account</h1>
+        <form id="register-form" class="mt-6 grid gap-4">
+            <div>
+                <label class="block text-sm text-zinc-400">Username</label>
+                <input name="username"
+                    class="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 outline-none focus:ring-2 focus:ring-brand-600"
+                    placeholder="yourname" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">Email</label>
+                <input name="email" type="email"
+                    class="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 outline-none focus:ring-2 focus:ring-brand-600"
+                    placeholder="you@example.com" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">Password</label>
+                <input name="password" type="password"
+                    class="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 outline-none focus:ring-2 focus:ring-brand-600"
+                    placeholder="••••••••" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">Role</label>
+                <select name="role"
+                    class="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 outline-none focus:ring-2 focus:ring-brand-600">
+                    <option value="client">Client</option>
+                    <option value="freelancer">Freelancer</option>
+                </select>
+            </div>
+            <button
+                class="mt-2 inline-flex items-center rounded-lg bg-brand-600 px-4 py-2.5 font-medium hover:bg-brand-500 w-full">Create
+                account</button>
+        </form>
+    </div>
+    <p class="mt-4 text-center text-sm text-zinc-400">Already have an account? <a class="text-brand-500 hover:underline"
+            href="/login">Sign in</a></p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const payload = {
+            username: form.username.value,
+            email: form.email.value,
+            password: form.password.value,
+            role: form.role.value
+        };
+        const res = await fetch('/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            location.href = '/login';
+        } else {
+            const err = await res.json().catch(() => ({}));
+            alert(err.detail || 'Registration failed');
+        }
+    });
+</script>
+{% endblock %}

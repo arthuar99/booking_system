@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Add Review · Booking Platform{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-md px-4 sm:px-6 lg:px-8 py-12">
+    <div
+        class="rounded-2xl border border-zinc-200 p-6 bg-white/70 ring-gradient dark:border-zinc-800 dark:bg-zinc-950/40">
+        <h1 class="text-2xl font-semibold tracking-tight">Add review</h1>
+        <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Share honest feedback to help others choose
+            confidently.</p>
+        <form id="review-form" class="mt-6 grid gap-4">
+            <div>
+                <label class="block text-sm text-zinc-400">Booking ID</label>
+                <input name="booking_id" type="number"
+                    class="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">Rating (1-5)</label>
+                <input name="rating" type="number" min="1" max="5"
+                    class="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">Comment</label>
+                <textarea name="comment" rows="4"
+                    class="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900"></textarea>
+            </div>
+            <button
+                class="mt-2 inline-flex items-center rounded-lg btn-primary px-4 py-2.5 font-medium w-full">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('review-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const token = localStorage.getItem('token');
+        const payload = {
+            booking_id: Number(form.booking_id.value),
+            rating: Number(form.rating.value),
+            comment: form.comment.value
+        };
+        const res = await fetch('/reviews/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            alert('Review added');
+        } else {
+            const err = await res.json().catch(() => ({}));
+            alert(err.detail || 'Failed');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Services · Booking Platform{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex items-center justify-between gap-4">
+        <h1 class="text-2xl font-semibold">Explore services</h1>
+        <div class="relative w-72 max-w-full">
+            <input id="q" placeholder="Search e.g. design, marketing"
+                class="w-full rounded-xl border border-zinc-800 bg-zinc-900/70 px-4 py-2.5 pr-10 outline-none focus:ring-2 focus:ring-brand-600" />
+            <span class="absolute right-3 top-2.5 text-zinc-500">⌘K</span>
+        </div>
+    </div>
+    <p class="mt-2 text-sm text-zinc-400">Curated, high-signal services from verified freelancers. Find your perfect
+        match.</p>
+
+    <div id="cards" class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for s in services %}
+        <div
+            class="card group rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 ring-gradient bg-white/70 dark:bg-zinc-950/40">
+            <div class="flex items-center justify-between">
+                <div class="text-xs text-zinc-500 dark:text-zinc-400">by #{{ s.freelancer_id }}</div>
+                <div class="text-brand-600 font-semibold">${{ '%.2f'|format(s.price) }}</div>
+            </div>
+            <a href="/services/{{ s.id }}/view"
+                class="mt-2 block text-lg font-semibold hover:underline underline-offset-4">{{ s.title }}</a>
+            <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400 line-clamp-3">{{ s.description }}</p>
+            <div class="mt-4 flex items-center gap-2">
+                <a href="/services/{{ s.id }}/view"
+                    class="inline-flex items-center rounded-lg border btn-outline px-3 py-1.5 text-sm">Preview</a>
+                <a href="/book?service_id={{ s.id }}"
+                    class="inline-flex items-center rounded-lg btn-primary px-3 py-1.5 text-sm font-medium">Book</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-span-full text-zinc-400">No services yet.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    const q = document.getElementById('q');
+    const cards = document.getElementById('cards');
+    const items = Array.from(cards.children);
+    function filter() {
+        const v = q.value.trim().toLowerCase();
+        items.forEach(el => {
+            const text = el.textContent.toLowerCase();
+            el.style.display = text.includes(v) ? '' : 'none';
+        });
+    }
+    q.addEventListener('input', filter);
+    window.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); q.focus(); } });
+</script>
+{% endblock %}

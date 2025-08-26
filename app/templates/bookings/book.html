@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Book a Service · Booking Platform{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-semibold tracking-tight">Book a service</h1>
+    <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">Pick a time that works for you. You’ll see it in My
+        bookings.</p>
+    <div
+        class="mt-6 rounded-2xl border border-zinc-200 p-6 bg-white/70 ring-gradient dark:border-zinc-800 dark:bg-zinc-950/40">
+        <form id="book-now" class="grid gap-4">
+            <div>
+                <label class="block text-sm text-zinc-400">Service ID</label>
+                <input id="service_id" name="service_id" type="number"
+                    class="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">Start at</label>
+                <input name="start_at" type="datetime-local"
+                    class="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900" />
+            </div>
+            <button class="mt-2 inline-flex items-center rounded-lg btn-primary px-4 py-2.5 font-medium">Book
+                now</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('book-now').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const token = localStorage.getItem('token');
+        const payload = {
+            service_id: Number(form.service_id.value),
+            start_at: new Date(form.start_at.value).toISOString()
+        };
+        const res = await fetch('/bookings/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            location.href = '/my/bookings';
+        } else {
+            const err = await res.json().catch(() => ({}));
+            alert(err.detail || 'Booking failed');
+        }
+    });
+    // Prefill from query string
+    (function () {
+        const sid = new URL(location.href).searchParams.get('service_id');
+        if (sid) {
+            const input = document.getElementById('service_id');
+            if (input) input.value = sid;
+        }
+    })();
+</script>
+{% endblock %}

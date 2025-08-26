@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Login · Booking Platform{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-md px-4 sm:px-6 lg:px-8 py-12">
+    <div class="rounded-2xl border border-zinc-800 p-6 bg-zinc-950/40">
+        <h1 class="text-xl font-semibold">Sign in</h1>
+        <form id="login-form" class="mt-6 grid gap-4">
+            <div>
+                <label class="block text-sm text-zinc-400">Email</label>
+                <input name="username" type="email"
+                    class="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 outline-none focus:ring-2 focus:ring-brand-600"
+                    placeholder="you@example.com" />
+            </div>
+            <div>
+                <label class="block text-sm text-zinc-400">Password</label>
+                <input name="password" type="password"
+                    class="mt-1 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 outline-none focus:ring-2 focus:ring-brand-600"
+                    placeholder="••••••••" />
+            </div>
+            <button
+                class="mt-2 inline-flex items-center rounded-lg bg-brand-600 px-4 py-2.5 font-medium hover:bg-brand-500 w-full">Sign
+                in</button>
+        </form>
+    </div>
+    <p class="mt-4 text-center text-sm text-zinc-400">No account? <a class="text-brand-500 hover:underline"
+            href="#">Create one</a></p>
+    {% endblock %}
+    {% block scripts %}
+    <script>
+        (function () {
+            const params = new URLSearchParams(location.search);
+            if (params.get('reason') === 'auth') {
+                const toast = document.createElement('div');
+                toast.setAttribute('role', 'status');
+                toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900 shadow-soft dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200';
+                toast.textContent = 'Please login or register to access this page.';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3500);
+            }
+        })();
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new URLSearchParams();
+            formData.append('username', form.username.value);
+            formData.append('password', form.password.value);
+            const res = await fetch('/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            });
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem('token', data.access_token);
+                location.href = '/';
+            } else {
+                alert('Login failed');
+            }
+        });
+    </script>
+    {% endblock %}
