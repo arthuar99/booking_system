@@ -1,0 +1,16 @@
+version: 1.0
+runtime: docker
+build:
+  commands:
+    build:
+      - echo "Building Docker image..."
+run:
+  runtime-version: latest
+  command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+  network:
+    port: 8000
+    env: DATABASE_URL
+    env: SECRET_KEY
+    env: ALGORITHM
+    env: ACCESS_TOKEN_EXPIRE_MINUTES
+
