@@ -1,11 +1,13 @@
 # app/main.py
 
+from datetime import datetime
 from fastapi import FastAPI, Request, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from app.database.connection import Base, engine
+from app.database.connection import Base, engine, SessionLocal
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import HTMLResponse
+from sqlalchemy import text
 
 from app.core.jwt_bearer import JWTBearer
 from app.core.deps import get_current_user
@@ -17,6 +19,10 @@ import app.models.service       # noqa: F401
 import app.models.availability  # noqa: F401
 import app.models.booking       # noqa: F401
 import app.models.review        # noqa: F401
+import app.models.favorite      # noqa: F401
+
+# App version
+APP_VERSION = "1.0.0"
 
 app = FastAPI()
 
@@ -32,6 +38,7 @@ from app.routers.availability import router as availability_router
 from app.routers.Booking import router as booking_router
 from app.routers.review import router as reviews_router
 from app.routers.pages import router as pages_router
+from app.routers.favorites import router as favorites_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -71,6 +78,7 @@ app.include_router(services_router)
 app.include_router(availability_router)
 app.include_router(booking_router)
 app.include_router(reviews_router)
+app.include_router(favorites_router)
 app.include_router(pages_router)
 
 # Root page
@@ -85,3 +93,32 @@ def login_page(request: Request):
 @app.get("/dashboard", response_class=HTMLResponse, dependencies=[Depends(JWTBearer())])
 def dashboard_page(request: Request, user=Depends(get_current_user)):
     return templates.TemplateResponse("dashboard.html", {"request": request, "user": user})
+
+
+@app.get("/health", tags=["health"])
+def health_check():
+    """
+    Health check endpoint for monitoring and CI/CD.
+    Returns app status, database connection status, version, and timestamp.
+    """
+    db_status = "healthy"
+    db_message = "Connected"
+    
+    try:
+        db = SessionLocal()
+        db.execute(text("SELECT 1"))
+        db.close()
+    except Exception as e:
+        db_status = "unhealthy"
+        db_message = str(e)
+    
+    return {
+        "status": "healthy" if db_status == "healthy" else "degraded",
+        "version": APP_VERSION,
+        "timestamp": datetime.utcnow().isoformat(),
+        "database": {
+            "status": db_status,
+            "message": db_message
+        }
+    }
+
