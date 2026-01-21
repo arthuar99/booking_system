@@ -70,5 +70,5 @@ jobs:
         run: |
           timeout 10 uvicorn app.main:app --host 0.0.0.0 --port 8000 &
           sleep 5
-          curl -f http://localhost:8000/health || exit 1
+          curl -f http://localhost:8000/ || exit 1
           pkill -f uvicorn || true
