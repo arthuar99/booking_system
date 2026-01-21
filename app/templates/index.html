@@ -3,6 +3,11 @@
 
 {% block content %}
 <section class="relative overflow-hidden">
+    <!-- Floating decorative orbs -->
+    <div class="float-element orb-1"></div>
+    <div class="float-element orb-2"></div>
+    <div class="float-element orb-3"></div>
+    
     <div
         class="absolute inset-0 -z-10 bg-[radial-gradient(1200px_480px_at_20%_0%,_rgba(59,130,246,.25),_transparent_40%),_linear-gradient(180deg,_#0b0b0f,_#121217)] dark:bg-[radial-gradient(1200px_480px_at_20%_0%,_rgba(59,130,246,.15),_transparent_40%),_linear-gradient(180deg,_#0b0b0f,_#121217)]">
     </div>
@@ -23,24 +28,158 @@
     </div>
 </section>
 
-<section id="explore" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+<!-- ========== ANIMATED STATISTICS SECTION ========== -->
+<section class="stats-section py-16 relative" data-reveal>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6" data-reveal-stagger>
+            <!-- Stat 1: Happy Users -->
+            <div class="stat-card rounded-2xl p-6 text-center">
+                <div class="stat-icon mx-auto pulse-glow">👥</div>
+                <div class="mt-4">
+                    <span class="stat-number text-3xl sm:text-4xl font-bold" data-counter data-target="10000" data-suffix="+">0</span>
+                </div>
+                <div class="mt-2 text-sm text-zinc-400">Happy Users</div>
+            </div>
+            
+            <!-- Stat 2: Services Completed -->
+            <div class="stat-card rounded-2xl p-6 text-center">
+                <div class="stat-icon mx-auto pulse-glow">✅</div>
+                <div class="mt-4">
+                    <span class="stat-number text-3xl sm:text-4xl font-bold" data-counter data-target="5000" data-suffix="+">0</span>
+                </div>
+                <div class="mt-2 text-sm text-zinc-400">Services Completed</div>
+            </div>
+            
+            <!-- Stat 3: Expert Freelancers -->
+            <div class="stat-card rounded-2xl p-6 text-center">
+                <div class="stat-icon mx-auto pulse-glow">⭐</div>
+                <div class="mt-4">
+                    <span class="stat-number text-3xl sm:text-4xl font-bold" data-counter data-target="500" data-suffix="+">0</span>
+                </div>
+                <div class="mt-2 text-sm text-zinc-400">Expert Freelancers</div>
+            </div>
+            
+            <!-- Stat 4: Average Rating -->
+            <div class="stat-card rounded-2xl p-6 text-center">
+                <div class="stat-icon mx-auto pulse-glow">🏆</div>
+                <div class="mt-4">
+                    <span class="stat-number text-3xl sm:text-4xl font-bold">4.9★</span>
+                </div>
+                <div class="mt-2 text-sm text-zinc-400">Average Rating</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="explore" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12" data-reveal>
     <h2 class="text-xl font-semibold mb-6">Popular categories</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for category in [
-        {"title":"Design","desc":"UI/UX, logos, branding"},
-        {"title":"Development","desc":"Web, mobile, backend"},
-        {"title":"Marketing","desc":"SEO, content, ads"},
-        {"title":"Writing","desc":"Copywriting, blogs, scripts"},
-        {"title":"Video","desc":"Editing, motion graphics"},
-        {"title":"Consulting","desc":"Business, finance, legal"}
+        {"title":"Design","desc":"UI/UX, logos, branding","icon":"🎨"},
+        {"title":"Development","desc":"Web, mobile, backend","icon":"💻"},
+        {"title":"Marketing","desc":"SEO, content, ads","icon":"📈"},
+        {"title":"Writing","desc":"Copywriting, blogs, scripts","icon":"✍️"},
+        {"title":"Video","desc":"Editing, motion graphics","icon":"🎬"},
+        {"title":"Consulting","desc":"Business, finance, legal","icon":"💼"}
         ] %}
         <div
             class="card rounded-2xl border border-zinc-200 p-5 bg-white/70 ring-gradient dark:border-zinc-800 dark:bg-zinc-950/40">
-            <div class="text-brand-600 text-xl">★</div>
+            <div class="text-3xl">{{ category.icon }}</div>
             <div class="mt-3 font-medium text-zinc-900 dark:text-zinc-100">{{ category.title }}</div>
             <div class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{{ category.desc }}</div>
         </div>
         {% endfor %}
     </div>
 </section>
+
+<!-- ========== TESTIMONIALS SECTION ========== -->
+<section class="py-16 relative overflow-hidden" data-reveal>
+    <div class="float-element orb-2" style="top: 20%; right: 10%;"></div>
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <h2 class="text-xl font-semibold mb-8 text-center">What our clients say</h2>
+        
+        <div class="testimonial-carousel">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-slide">
+                <div class="testimonial-card">
+                    <p class="text-lg text-zinc-300 leading-relaxed">
+                        "This platform completely transformed how I find freelancers. The booking process is seamless and the quality of work has been exceptional every single time."
+                    </p>
+                    <div class="mt-6 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-lg font-bold">S</div>
+                        <div>
+                            <div class="font-medium text-zinc-100">Sarah Mitchell</div>
+                            <div class="text-sm text-zinc-400">CEO, TechStart Inc.</div>
+                        </div>
+                        <div class="ml-auto text-yellow-400">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="testimonial-slide">
+                <div class="testimonial-card">
+                    <p class="text-lg text-zinc-300 leading-relaxed">
+                        "I've tried many freelance platforms, but this one stands out. The availability feature saves so much time, and the reviews are genuinely helpful."
+                    </p>
+                    <div class="mt-6 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-lg font-bold">M</div>
+                        <div>
+                            <div class="font-medium text-zinc-100">Michael Chen</div>
+                            <div class="text-sm text-zinc-400">Product Manager, DesignCo</div>
+                        </div>
+                        <div class="ml-auto text-yellow-400">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 3 -->
+            <div class="testimonial-slide">
+                <div class="testimonial-card">
+                    <p class="text-lg text-zinc-300 leading-relaxed">
+                        "As a freelancer, this platform has been a game-changer. The booking system is intuitive and clients are always professional. Highly recommended!"
+                    </p>
+                    <div class="mt-6 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-lg font-bold">E</div>
+                        <div>
+                            <div class="font-medium text-zinc-100">Emma Rodriguez</div>
+                            <div class="text-sm text-zinc-400">UX Designer</div>
+                        </div>
+                        <div class="ml-auto text-yellow-400">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Carousel dots -->
+        <div class="carousel-dots">
+            <button class="carousel-dot active" aria-label="Testimonial 1"></button>
+            <button class="carousel-dot" aria-label="Testimonial 2"></button>
+            <button class="carousel-dot" aria-label="Testimonial 3"></button>
+        </div>
+    </div>
+</section>
+
+<!-- ========== CTA SECTION ========== -->
+<section class="py-16" data-reveal>
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div class="stat-card rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden">
+            <div class="float-element orb-3" style="width: 200px; height: 200px; top: -50px; left: -50px;"></div>
+            <h2 class="text-2xl sm:text-3xl font-semibold text-zinc-100">Ready to get started?</h2>
+            <p class="mt-4 text-zinc-400 max-w-xl mx-auto">Join thousands of satisfied users and find the perfect freelancer for your next project.</p>
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="/register" class="inline-flex items-center rounded-lg btn-primary px-6 py-3 font-medium text-lg shimmer">
+                    Create free account
+                </a>
+                <a href="/services" class="inline-flex items-center rounded-lg border btn-outline px-6 py-3 font-medium">
+                    Explore services
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/animations.js"></script>
 {% endblock %}
