@@ -1,7 +1,6 @@
 name: CI
 
 on:
-  workflow_dispatch: {}
   push:
     branches: [main]
   pull_request:
@@ -47,9 +46,13 @@ jobs:
           echo "Waiting for PostgreSQL to be ready..."
           sleep 5
 
-      - name: Create database tables
+      - name: Run database migrations
         run: |
-          python -c "from app.database.connection import Base, engine; Base.metadata.create_all(bind=engine)"
+          alembic upgrade head
+
+      - name: Seed test data
+        run: |
+          python scripts/seed_data.py
 
       - name: Run linters
         run: |

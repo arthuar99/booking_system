@@ -17,27 +17,36 @@ services:
       retries: 5
 
   web:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: booking_platform_web
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/app
+      # Exclude node_modules and other build artifacts
+      - /app/venv
+      - /app/__pycache__
     ports:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/booking_platform
-      SECRET_KEY: your-secret-key-change-in-production
-      ALGORITHM: HS256
+      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-in-production}
+      ALGORITHM: ${ALGORITHM:-HS256}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
+    # Optional: Load environment variables from .env file if it exists
+    # env_file:
+    #   - .env
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.settimeout(1); result=s.connect_ex(('localhost', 8000)); s.close(); exit(0 if result == 0 else 1)"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 10s
 
 volumes:
   postgres_data:
